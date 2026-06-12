@@ -1,1 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四年級課程：羅屋築蹟~書院足跡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        tech: {
+                            dark: '#020617',    // 極深藍/黑
+                            panel: '#0f172a',   // 稍微亮的深藍面板
+                            blue: '#1e3a8a',    // 科技藍
+                            cyan: '#06b6d4',    // 霓虹青
+                            glow: '#38bdf8',    // 發光亮藍
+                            purple: '#a855f7',  // 科技紫
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020617; /* 極深藍背景 */
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
 
+        /* 網格背景增加科技感 */
+        .tech-grid {
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* 玻璃質感共用類別 */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* 翻轉卡片效果 - 針對玻璃質感微調 */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.05);
+        }
+
+        .flip-card-front {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 58, 138, 0.6));
+            backdrop-filter: blur(8px);
+            color: #38bdf8;
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.8), rgba(30, 58, 138, 0.9));
+            backdrop-filter: blur(8px);
+            color: white;
+            transform: rotateY(180deg);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 隱藏捲軸但保留滾動功能 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 科技發光效果 */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+        .glow-text-purple {
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen pb-16 tech-grid">
+
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-900/10 blur-[120px]"></div>
+        <div class="absolute bottom-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-cyan-900/15 blur-[150px]"></div>
+        <div class="absolute top-[40%] left-[50%] w-[45vw] h-[45vw] rounded-full bg-blue-900/10 blur-[130px]"></div>
+    </div>
+
+    <header class="relative z-10 pt-16 pb-12 px-4 mb-8 border-b border-white/10 glass-panel">
+        <div class="max-w-5xl mx-auto relative z-10 text-center">
+            <span class="inline-block bg-purple-950/50 border border-purple-500/50 text-purple-300 text-sm font-bold px-4 py-1.5 rounded-full mb-5 shadow-[0_0_10px_rgba(168,85,247,0.3)] backdrop-blur-md">
+                <span class="inline-block w-2 h-2 rounded-full bg-purple-400 mr-2 animate-pulse"></span>
+                四年級在地化課程 (總計 13 節課)
+            </span>
+            <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-wide text-white glow-text">
+                羅屋築蹟 <span class="text-purple-400 font-light">~ 書院足跡</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
+                探尋關西上南片羅屋書院的建築美學、堂號淵源與歷史風華。結合走讀探究、民間故事閱讀與手作實作，領會客家勤學致遠的家族智慧。
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 relative z-10">
+        
+        <section class="mb-14">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white flex items-center border-l-4 border-purple-500 pl-3 glow-text-purple">
+                    <svg class="w-6 h-6 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    課前小互動：客語與核心概念翻翻卡
+                </h2>
+                <span class="text-sm text-purple-400/80 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-900/50">點擊卡片翻轉</span>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+                <!-- 卡片 1 -->
+                <div class="flip-card group" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front group-hover:border-purple-400/50 transition-colors">
+                            <svg class="w-8 h-8 mb-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                            <h3 class="text-xl font-bold text-slate-100 tracking-wider">羅屋書院</h3>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="font-bold text-xl mb-1 text-white glow-text-purple">Ló-vuk Sû-yen</p>
+                            <p class="text-xs text-purple-50 leading-relaxed px-1">合院兼私塾學堂，代表客家人「耕讀傳家」重視教育的精神。</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 卡片 2 -->
+                <div class="flip-card group" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front group-hover:border-purple-400/50 transition-colors">
+                            <svg class="w-8 h-8 mb-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <h3 class="text-xl font-bold text-slate-100 tracking-wider">豫章堂</h3>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="font-bold text-xl mb-1 text-white glow-text-purple">Yí-chông Thòng</p>
+                            <p class="text-xs text-purple-50 leading-relaxed px-1">羅氏家族堂號。源於漢代祖先築城植豫章樹，具有飲水思源之意。</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 卡片 3 -->
+                <div class="flip-card group" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front group-hover:border-purple-400/50 transition-colors">
+                            <svg class="w-8 h-8 mb-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                            <h3 class="text-xl font-bold text-slate-100 tracking-wider">得月樓</h3>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="font-bold text-xl mb-1 text-white glow-text-purple">Tet-ngiet Lèu</p>
+                            <p class="text-xs text-purple-50 leading-relaxed px-1">書院旁極具歐風之洋樓建築，呈現中西文化並存共榮的美感。</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 卡片 4 -->
+                <div class="flip-card group" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front group-hover:border-purple-400/50 transition-colors">
+                            <svg class="w-8 h-8 mb-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                            <h3 class="text-xl font-bold text-slate-100 tracking-wider">一堂四橫</h3>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="font-bold text-xl mb-1 text-white glow-text-purple">Yit Thòng Sî Vàng</p>
+                            <p class="text-xs text-purple-50 leading-relaxed px-1">典型客家合院格局：中間一座正堂（公廳），左右各有兩座橫屋。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-14 relative z-20">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-purple-500 flex flex-col lg:flex-row items-center justify-between gap-6 overflow-hidden relative group">
+                <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="flex items-start gap-4 relative z-10">
+                    <div class="p-3.5 bg-purple-950/80 border border-purple-500/30 rounded-xl text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)] shrink-0 mt-1">
+                        <svg class="w-8 h-8 animate-pulse text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 text-xs font-black text-purple-400 tracking-wider uppercase bg-purple-950/60 border border-purple-500/30 px-2.5 py-0.5 rounded-full">
+                            <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping"></span>
+                            單元四新增推薦讀本
+                        </span>
+                        <h3 class="text-xl font-bold text-white mt-1.5">建築裡的文化沙龍：羅屋書院雙主題故事導讀</h3>
+                        <p class="text-sm text-slate-400 mt-1 leading-relaxed max-w-2xl">
+                            專為四年級開發的深度閱讀教材！點擊右方按鈕即可進入數位精讀，從木雕裝飾的「忠孝節義四格漫畫」讀到羅氏先祖「豫章堂」的萬里遷徙史。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0 relative z-10">
+					<button onclick="openBookModal('comic')" class="px-5 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-[0_0_15px_rgba(168,85,247,0.2)] hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group-hover:scale-[1.02]">
+						<span>導讀 1：《建築裡的四格漫畫》</span>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253"></path></svg>
+					</button>
+					<button onclick="openBookModal('history')" class="px-5 py-3 bg-slate-900 border border-purple-500/30 hover:border-purple-400 text-purple-300 hover:text-white font-bold text-sm rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+						<span>導讀 2：《豫章堂羅屋書房》</span>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+					</button>
+					<!-- 新增導讀 3 -->
+					<a href="./storybook/class4storybook.html" target="_blank" class="px-5 py-3 bg-slate-900 border border-cyan-500/30 hover:border-cyan-400 text-cyan-300 hover:text-white font-bold text-sm rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+						<span>導讀 3：《故事繪本》</span>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+					</a>
+				</div>
+            </div>
+        </section>
+
+        <section class="mb-14 relative z-20">
+            <h2 class="text-2xl font-bold text-white flex items-center border-l-4 border-purple-500 pl-3 mb-6 glow-text-purple">
+                <svg class="w-6 h-6 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                四年級課程架構總覽
+            </h2>
+
+            <div class="glass-panel p-4 rounded-2xl border border-white/10 overflow-hidden relative group cursor-pointer" onclick="openImageModal()">
+                <!-- 精緻的 hover 遮罩提示 -->
+                <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10 backdrop-blur-sm">
+                    <div class="bg-purple-950/80 border border-purple-400/60 px-6 py-3 rounded-full text-purple-200 font-bold tracking-widest flex items-center gap-2 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                        <svg class<div class="relative rounded-xl overflow-hidden w-full">"w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                        點擊放大檢視清晰架構圖
+                    </div>
+                </div>
+
+                <!-- 課程架構圖主體（支援未載入時的超美科技藍圖 SVG 占位符） -->
+                <div class="relative rounded-xl overflow-hidden w-full">
+                    <img id="curriculum-map" src="class4.png" alt="四年級羅屋書院 課程架構圖" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.01]" 
+                         onerror="showSvgBlueprint(this)">
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-0 relative z-20">
+            <h2 class="text-2xl font-bold text-white flex items-center border-l-4 border-purple-500 pl-3 mb-5 glow-text-purple">
+                <svg class="w-6 h-6 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                單元課程內容
+            </h2>
+            
+            <!-- 導航標籤列 (玻璃質感) -->
+            <div class="flex overflow-x-auto no-scrollbar gap-2 pb-0 relative" id="tabs-container">
+                <!-- JS動態生成 -->
+            </div>
+        </section>
+
+        <!-- 課程內容顯示區 -->
+        <section id="content-container" class="min-h-[400px] relative z-10 -mt-[1px]">
+            <!-- JS動態生成卡片內容 -->
+        </section>
+
+    </main>
+
+    <!-- 書本故事互動導讀彈窗 (Modal) -->
+    <div id="book-modal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300 opacity-0" onclick="closeBookModal()">
+        <div class="glass-panel max-w-2xl w-full rounded-2xl overflow-hidden shadow-2xl border border-purple-500/30 relative" onclick="event.stopPropagation()">
+            <!-- 關閉按鈕 -->
+            <button class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-2 bg-slate-900/60 rounded-full border border-white/10 z-10" onclick="closeBookModal()">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <!-- 彈窗內容區 -->
+            <div id="book-modal-content" class="p-6 md:p-8">
+                <!-- 動態注入內容 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 圖片放大檢視 Lightbox 燈箱視窗 -->
+    <div id="image-modal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 md:p-8 transition-opacity duration-300 opacity-0" onclick="closeImageModal()">
+        <div class="relative max-w-7xl w-full max-h-[90vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+            <!-- 關閉按鈕 -->
+            <button class="absolute -top-12 right-0 text-slate-400 hover:text-white transition-colors p-2 bg-slate-900/60 rounded-full border border-white/10" onclick="closeImageModal()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <!-- 燈箱展示內容 -->
+            <div id="modal-image-container" class="w-full max-h-[80vh] flex items-center justify-center rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-slate-900/40">
+                <!-- 這裡在 JS 中動態注入，以確保即使是 SVG 也能完美呈現 -->
+            </div>
+            
+            <p class="text-slate-400 text-sm mt-4 tracking-wider text-center bg-slate-900/80 px-4 py-2 rounded-full border border-white/5">
+                點擊任意處或按下 <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-xs text-purple-300">Esc</kbd> 即可返回網頁
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 定義四年級課程資料
+        const curriculumData = [
+            {
+                id: "unit1",
+                title: "單元一：話說頭擺與古今書院 (2節)",
+                shortTitle: "單元一",
+                lessons: [
+                    {
+                        period: "第一節",
+                        name: "認識羅屋書院歷史",
+                        content: "認識羅屋書院歷史背景、創建家族、以及傳統客家「一堂四橫」的代表性建築樣式，探尋老祖宗的宏偉開墾故事。",
+                        method: "班級教學、講述與問答",
+                        objective: "能說出羅屋書院的建造者與歷史背景，辨識「一堂四橫」的基本合院空間配置。",
+                        hakka: "學習「羅屋書院」、「公廳」、「一堂四橫」等客語核心詞彙。",
+                        output: "小組討論記錄與初步口頭發表。"
+                    },
+                    {
+                        period: "第二節",
+                        name: "古代私塾與現代學校",
+                        content: "比較古代客家私塾（書房）與現代學校在教學模式、環境及制度上的差異，引導學生對應古代「六藝」與現代學科。",
+                        method: "班級教學、比較分析與小組討論",
+                        objective: "能辨析古代「六藝」與現代學科的對應關係，理解古今求學制度的進步與演變。",
+                        hakka: "嘗試使用簡單客語描述古今求學環境的不同特色。",
+                        output: "完成古今求學對比小圖表。"
+                    }
+                ]
+            },
+            {
+                id: "unit2",
+                title: "單元二：書院建築與堂號 (1節)",
+                shortTitle: "單元二",
+                lessons: [
+                    {
+                        period: "第三節",
+                        name: "洋樓與堂號——豫章堂",
+                        content: "介紹書院旁的西式「得月樓」洋樓與三合院共存的獨特景觀；深入解析「豫章堂」堂號之由來與象徵，引導孩子探查自家的祖傳堂號。",
+                        method: "多媒體教學、課前探查分享",
+                        objective: "認識洋西建築與傳統客家三合院共融共存的融合特色，並理解堂號對客家家族凝聚的重大歷史意義。",
+                        hakka: "練習用客話流暢地唸出自己的姓氏與自家的堂號（如：豫章堂羅、隴西堂李、清河堂張）。",
+                        output: "填寫並發表自家「堂號來源與家族姓氏」搜尋小紀錄。"
+                    }
+                ]
+            },
+            {
+                id: "unit3",
+                title: "單元三：建築藝術之美 (1節)",
+                shortTitle: "單元三",
+                lessons: [
+                    {
+                        period: "第四節",
+                        name: "雕樑畫棟細細看",
+                        content: "欣賞羅屋書院內巧奪天工的石雕、木雕、剪黏、交趾陶等傳統工藝，觀察其雕刻題材、材質特性與所處的建築空間位置。",
+                        method: "圖片與模型賞析、特寫觀察",
+                        objective: "能指認並辨識至少兩種传统建築工藝（如石雕、木雕）的材質特性與工藝美感。",
+                        hakka: "學習「石雕」、「木雕」、「窗花」、「泥塑」等經典藝術工藝的客話發音。",
+                        output: "填寫「羅屋書院建築工藝觀察紀錄表」。"
+                    }
+                ]
+            },
+            {
+                id: "unit4",
+                title: "單元四：閱讀與文化探究 (2節) *新增亮點",
+                shortTitle: "單元四",
+                lessons: [
+                    {
+                        period: "第五節 (第1節)",
+                        name: "閱讀：建築裡的故事書",
+                        content: "導讀《建築裡的四格漫畫》：探究書院中「渭水聘賢」、「三顧茅廬」、「八仙過海」等傳統木雕與石雕內含的民間傳說故事。",
+                        method: "繪本共讀、故事探究與小組思辨",
+                        objective: "能理解並分析書院裝飾（四格漫畫）中所傳遞的賢能、忠孝等民間倫理，並能與日常生活經驗作結合。",
+                        hakka: "運用客語說出故事關鍵人物名稱（如：孔明、關公、劉備）進行情境扮演。",
+                        output: "學生口頭發表對故事涵義的看法，並完成故事啟示卡。",
+                        link: "comic"
+                    },
+                    {
+                        period: "第六節 (第2節)",
+                        name: "閱讀：豫章堂的前世今生",
+                        content: "閱讀《豫章堂羅屋書房》精華：了解羅氏遠祖羅珠公於西漢南昌築城，並在城內廣植樟樹（豫章）進而受封命名堂號的遷徙大歷史。",
+                        method: "文本閱讀、家族地理遷徙地圖拼貼",
+                        objective: "能閱讀歷史短文並理解羅氏堂號的由來，體會客家先民萬里遷徙中「飲水思源」與慎終追遠的情感。",
+                        hakka: "學習堂號歷史中的關鍵客語詞彙（如：豫章樹、築城、遷徙、源頭）。",
+                        output: "繪製家族祖先遷徙概念路線，並口頭分享心得。",
+                        link: "history"
+                    }
+                ]
+            },
+            {
+                id: "unit5",
+                title: "單元五：書院輕旅行與實作 (2節)",
+                shortTitle: "單元五",
+                lessons: [
+                    {
+                        period: "第七節 (第1節)",
+                        name: "漫步上南片",
+                        content: "實地踏查關西上南片庄頭，由羅屋書院傳人羅仕龍老師親自帶領，觀察金城武樹、百年水車、羅屋書院主體建築，以及秀美的農村地景。",
+                        method: "社區實地踏查、專家導覽引領",
+                        objective: "能在實地走讀中動態紀錄羅屋書院的完整空間形態、與周邊純樸的農庄自然景觀，並實踐參訪公共古蹟的良好禮儀。",
+                        hakka: "導覽應用實踐：在路途或定點練習使用客語稱呼眼前的地標與景物（如：水車、禾埕、書院、大樹）。",
+                        output: "完成上南片走讀踏查路線圖草稿。"
+                    },
+                    {
+                        period: "第八節 (第2節)",
+                        name: "書院踏查大會師",
+                        content: "整理實地走讀的筆記、照片與訪談紀錄，進行小組統整、比對與發表，分享各自在羅屋書院各個角落所捕捉到的驚奇與發現。",
+                        method: "小組討論、多媒體整理、心得分享會",
+                        objective: "能將實地踏查到的零碎史料與相片整理，有邏輯地進行發表，並深刻體會在地文化之美。",
+                        hakka: "分享報告時，至少運用三句客話佳句，向導覽老師或班上表達踏查心得。",
+                        output: "完成「羅屋書院走讀觀察筆記與反思牆」。"
+                    }
+                ]
+            },
+            {
+                id: "unit6",
+                title: "單元六：客家手作體驗 (2節)",
+                shortTitle: "單元六",
+                lessons: [
+                    {
+                        period: "第九節 (第1節)",
+                        name: "童眼看世界——客家望遠鏡",
+                        content: "設計並製作精緻的「客家望遠鏡」，在鏡身包裹傳統客家花布、油桐花圖騰，讓學生透過望遠鏡，用全新、尊重的視角觀察歷史古蹟。",
+                        method: "美勞實作、文創設計、創作發表",
+                        objective: "能靈活運用手工材料與客家傳統視覺花樣，動手創作出兼具實用性與文化意象的望遠鏡作品。",
+                        hakka: "學會用客語說明花布與圖騰顏色（如：紅紅个、藍藍个、桐花開）。",
+                        output: "完成專屬客家花布裝飾望遠鏡實體。"
+                    },
+                    {
+                        period: "第十節 (第2節)",
+                        name: "對稱剪紙——吉祥窗花",
+                        content: "引導學生觀察書院中象徵「吉祥、步步高升」的精美窗花櫺，學習傳統對稱剪紙技藝，親自設計並剪製代表「吉祥如意、萬事亨通」的紅紙窗花。",
+                        method: "幾何對稱解析、剪紙剪刀實作",
+                        objective: "理解對稱剪花之幾何原理，並明白傳統窗花中各類吉祥圖案所代表的祝福寓意與文化美感。",
+                        hakka: "學會使用客語說出「剪紙」、「窗花」、「吉祥如意」等吉祥好話。",
+                        output: "剪製出兩幅色彩飽和、工藝細緻的「吉祥對稱窗花」。"
+                    }
+                ]
+            },
+            {
+                id: "unit7",
+                title: "單元七：客家諺語與智慧 (2節)",
+                shortTitle: "單元七",
+                lessons: [
+                    {
+                        period: "第十一節 (第1節)",
+                        name: "子弟不讀書，好比無目珠",
+                        content: "研讀客家先民關於「勉學、勤學」的經典客語諺語。例如「子弟不讀書，好比無目珠（指不識字就像瞎子）」等，探討耕讀文化對後代人品的淬鍊。",
+                        method: "諺語故事賞析、情境大師模擬",
+                        objective: "能理解並體會客語諺語中蘊涵的重視學術、尊重知識與勤奮自強的精神哲理。",
+                        hakka: "進行精準流暢的客家諺語音韻吟誦，熟悉諺語的押韻與聲調之美。",
+                        output: "分組情境劇展演：模擬古人向子弟訴說讀書重要性的對白。"
+                    },
+                    {
+                        period: "第十二節 (第2節)",
+                        name: "諺語智慧大車拼",
+                        content: "透過好玩、節奏明快的「智慧卡牌配對」遊戲或客語電子互動問答，讓孩子將學到的勤學諺語融入日常生活事件，融會貫通智慧結晶。",
+                        method: "遊戲化學習、情境配對小賽事",
+                        objective: "能靈活將所學的傳統勸學、修身諺語，適切地應用於合適的日常生活品德情境中。",
+                        hakka: "諺語背誦與生活情境問答對話實戰 (重點)。",
+                        output: "產出諺語品格情境配對連連看紀錄。"
+                    }
+                ]
+            },
+            {
+                id: "unit8",
+                title: "單元八：成果整合發表 (1節)",
+                shortTitle: "單元八",
+                lessons: [
+                    {
+                        period: "第十三節",
+                        name: "書院輕旅地圖與成果會",
+                        content: "整合整學期踏查、閱讀、手作與諺語所學，利用 Google Map 電子地圖規劃上南片觀光景點，合力繪製大張手繪「書院輕旅尋蹟地圖」並錄製雙語導覽報告。",
+                        method: "跨領域整合實作、客語口語發表展演",
+                        objective: "能跨域整合地理、歷史、手作作品，在舞台上與夥伴分工，進行兼具專業與文化溫度的專題報告。",
+                        hakka: "導覽錄影成果展示：組員分工進行，成果影片必須使用「國、客雙語（客語比重過半）」流暢介紹書院特點。(核心目標)",
+                        output: "「羅屋書院輕旅地圖」一幅 與 導覽報告實錄影片檔。"
+                    }
+                ]
+            }
+        ];
+
+        // 讀本詳細資料（單元四點擊彈窗使用）
+        const bookDetails = {
+            comic: {
+                title: "讀本：《建築裡的四格漫畫》",
+                subtitle: "— 走進羅屋書院的雕刻民間故事世界 —",
+                summary: "羅屋書院的正堂木雕與石雕中，裝飾了許多栩栩如生的人物與經典故事。這些故事不只是精湛的工藝，更像是在牆壁上連環播放的「四格漫畫」，無聲地向造訪者說故事。",
+                points: [
+                    { t: "三顧茅廬", d: "正堂上方細緻的木雕，刻畫著劉備、關羽、張飛在漫天風雪中，三度前往草廬誠心拜訪孔明的經典場景，傳遞「禮賢下士」與「精誠所至」的美德。" },
+                    { t: "八仙過海", d: "石雕與水車堵上刻著鐵拐李、漢鍾離、呂洞賓等八位仙人各顯神通橫渡東海的生動神態，寄寓「各展所長、團結共進」的平民精神。" },
+                    { t: "渭水聘賢", d: "木雕描繪西周文王親自拉車，前往渭水之濱延請姜太公出山輔佐天下的歷史故事，宣揚「敬重賢才」的家族教育觀念。" }
+                ],
+                hakkaTip: "客語情境扮演：\n請學生練習用客話流暢說出「孔明 (Khûng-mìn)」、「關公 (Kvân-kûng)」、「劉備 (Lìu-pi)」，並用客語對白模仿劉備說：『先生，請你出山協助吾。』"
+            },
+            history: {
+                title: "讀本：《豫章堂羅屋書房》",
+                subtitle: "— 探尋羅氏家族堂號的源流與南昌築城史 —",
+                summary: "「豫章堂」三個大字，高懸在羅屋書院的門額上。這堂號的背後，記載著一段跨越兩千年的壯闊遷徙與飲水思源史。",
+                points: [
+                    { t: "羅珠公開基築城", d: "西漢時期，羅氏遠祖羅珠公奉命在南昌修築城池。他在城池竣工後，親手在城內外廣植豫章樹（樟樹），使南昌綠意盎然，成為當地的美麗象徵。" },
+                    { t: "「豫章」堂號的誕生", d: "後世子孫為了緬懷羅珠公築城植樹的偉大功績，便以「豫章」作為羅氏家族共同的堂號。這也成了海內外客家羅氏子孫的文化認同符號。" },
+                    { t: "耕讀傳家的書齋", d: "羅家先民開墾關西上南片後，念念不忘教育子弟。在建立家族大宅的同時，將其規劃為「書房（私塾）」，聘請漢學名師教導庄內子弟讀書，成為當地文風鼎盛的搖籃。" }
+                ],
+                hakkaTip: "客語思維反思：\n試著用客語誦讀：「飲水愛知源頭 (Yím-súi oi tî ngièn-thèu)」，理解羅氏祖先不遠萬里來到台灣新竹關西開墾，卻始終在屋前寫上「豫章堂」的尋根情懷。"
+            }
+        };
+
+        let currentUnitId = curriculumData[0].id;
+
+        function init() {
+            renderTabs();
+            renderContent(currentUnitId);
+            setupEscKeyListener();
+        }
+
+        // 渲染切換標籤 (玻璃質感)
+        function renderTabs() {
+            const tabsContainer = document.getElementById('tabs-container');
+            tabsContainer.innerHTML = '';
+
+            curriculumData.forEach((unit) => {
+                const btn = document.createElement('button');
+                const isActive = unit.id === currentUnitId;
+                
+                // 動態設置按鈕樣式 (Tech Glassmorphism & Purple Glow)
+                let baseClasses = "whitespace-nowrap px-6 py-3 rounded-t-lg font-bold text-sm transition-all duration-300 ease-in-out backdrop-blur-md border border-b-0 ";
+                
+                if (isActive) {
+                    btn.className = baseClasses + "bg-purple-950/40 text-purple-300 border-purple-500/50 shadow-[0_-4px_15px_rgba(168,85,247,0.2)] relative z-20";
+                } else {
+                    btn.className = baseClasses + "bg-slate-800/30 text-slate-400 border-white/5 hover:bg-slate-700/50 hover:text-purple-200 hover:border-purple-500/30";
+                }
+                
+                btn.textContent = unit.shortTitle;
+                btn.onclick = () => {
+                    currentUnitId = unit.id;
+                    renderTabs(); 
+                    renderContent(unit.id);
+                };
+                tabsContainer.appendChild(btn);
+            });
+        }
+
+        function renderContent(unitId) {
+            const container = document.getElementById('content-container');
+            const unitData = curriculumData.find(u => u.id === unitId);
+            
+            if (!unitData) return;
+
+            // 內容區塊主體 (Glass Panel)
+            let html = `
+                <div class="fade-in glass-panel rounded-b-xl rounded-tr-xl p-6 lg:p-8 relative z-10 border-t-purple-500/50">
+                    <h3 class="text-xl md:text-2xl font-black text-white mb-8 border-b border-white/10 pb-4 flex items-center">
+                        <span class="w-2 h-8 bg-purple-500 rounded-full mr-3 shadow-[0_0_10px_rgba(168,85,247,0.8)]"></span>
+                        ${unitData.title}
+                    </h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            `;
+
+            unitData.lessons.forEach(lesson => {
+                // 每節課的卡片 (Dark Glass Card)
+                html += `
+                    <div class="bg-slate-900/40 border border-white/10 rounded-xl p-6 hover:border-purple-400/50 transition-all duration-300 relative overflow-hidden group shadow-lg hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] backdrop-blur-sm">
+                        <!-- 裝飾邊條 (Neon glow effect) -->
+                        <div class="absolute left-0 top-0 w-1 h-full bg-indigo-900/50 group-hover:bg-purple-400 transition-colors duration-500 shadow-[0_0_10px_rgba(168,85,247,0)] group-hover:shadow-[0_0_15px_rgba(168,85,247,1)]"></div>
+                        
+                        <div class="flex flex-wrap items-center justify-between mb-4 pl-3 gap-2">
+                            <span class="bg-purple-950 text-purple-300 border border-purple-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-[0_0_8px_rgba(168,85,247,0.2)]">
+                                ${lesson.period}
+                            </span>
+                            <span class="text-xs font-medium text-slate-300 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full">
+                                ${lesson.method}
+                            </span>
+                        </div>
+                        
+                        <h4 class="text-lg lg:text-xl font-bold text-slate-100 mb-3 pl-3 tracking-wide group-hover:text-purple-200 transition-colors">${lesson.name}</h4>
+                        <p class="text-sm text-slate-400 mb-5 pl-3 border-l-2 border-slate-700 ml-3 leading-relaxed">
+                            ${lesson.content}
+                        </p>
+
+                        <div class="space-y-4 mt-5 bg-slate-950/50 rounded-lg p-4 border border-white/5">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-indigo-400 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <div>
+                                    <span class="text-xs font-bold text-slate-500 block tracking-widest uppercase mb-1">學習目標</span>
+                                    <span class="text-sm font-medium text-slate-200 leading-relaxed">${lesson.objective}</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start bg-purple-900/10 p-3 rounded-lg border border-purple-500/20">
+                                <svg class="w-5 h-5 text-purple-400 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                                <div>
+                                    <span class="text-xs font-bold text-purple-400 block tracking-widest uppercase mb-1">客語扎根與元素</span>
+                                    <span class="text-sm font-bold text-purple-100 leading-relaxed">${lesson.hakka}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start mt-3 p-3">
+                                <svg class="w-5 h-5 text-cyan-400 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path></svg>
+                                <div>
+                                    <span class="text-xs font-bold text-slate-500 block tracking-widest uppercase mb-1">建議讀本或學生成果</span>
+                                    <span class="text-sm font-medium text-cyan-300 leading-relaxed">${lesson.output}</span>
+                                </div>
+                            </div>
+
+                            <!-- 若是閱讀導讀課程，顯示互動導讀按鈕 -->
+                            ${lesson.link ? `
+                            <div class="mt-4 pt-3 border-t border-white/5 flex justify-end">
+                                <button onclick="openBookModal('${lesson.link}')" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 hover:from-purple-500/40 hover:to-indigo-500/40 text-purple-300 hover:text-white border border-purple-500/30 hover:border-purple-400/50 text-xs font-bold rounded-lg transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.1)]">
+                                    <span>開啟數位故事導讀書包</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253"></path></svg>
+                                </button>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        // 開啟電子閱讀導讀
+        function openBookModal(bookKey) {
+            const modal = document.getElementById('book-modal');
+            const content = document.getElementById('book-modal-content');
+            const data = bookDetails[bookKey];
+            
+            if (!data) return;
+
+            // 渲染故事細節 HTML
+            let pointsHtml = '';
+            data.points.forEach(p => {
+                pointsHtml += `
+                    <div class="border-b border-white/5 pb-3 mb-3 last:border-0 last:pb-0 last:mb-0">
+                        <h4 class="text-base font-bold text-purple-300 mb-1 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                            ${p.t}
+                        </h4>
+                        <p class="text-sm text-slate-300 leading-relaxed pl-3">${p.d}</p>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = `
+                <span class="inline-block bg-purple-950/80 border border-purple-500/40 text-purple-300 text-xs font-bold px-3 py-1 rounded-full mb-3 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                    📖 四年級共讀導覽
+                </span>
+                <h3 class="text-xl md:text-2xl font-black text-white glow-text-purple mb-1">${data.title}</h3>
+                <p class="text-xs text-purple-400/80 font-bold tracking-widest mb-4">${data.subtitle}</p>
+                
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-white/5 mb-6">
+                    <p class="text-sm text-slate-400 leading-relaxed">${data.summary}</p>
+                </div>
+
+                <div class="space-y-4 mb-6 max-h-[220px] overflow-y-auto no-scrollbar pr-1">
+                    ${pointsHtml}
+                </div>
+
+                <div class="bg-purple-950/40 p-4 rounded-xl border border-purple-500/30">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <div>
+                            <span class="text-xs font-bold text-purple-300 block tracking-wider mb-1">客語互動演練點撥</span>
+                            <p class="text-sm text-slate-200 whitespace-pre-line leading-relaxed">${data.hakkaTip}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.offsetHeight; // 強制瀏覽器重繪
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBookModal() {
+            const modal = document.getElementById('book-modal');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // 如果四年級羅屋書院圖片加載失敗，動態生成極具美感的 SVG 科技藍圖
+        function showSvgBlueprint(imgElement) {
+            const container = imgElement.parentElement;
+            container.innerHTML = `
+                <div class="w-full h-full min-h-[350px] bg-slate-950/80 border border-purple-500/20 rounded-xl flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+                    <!-- 裝飾用網格線路 -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-20" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="10%" y1="0" x2="10%" y2="100%" stroke="#a855f7" stroke-width="1" stroke-dasharray="5,5"/>
+                        <line x1="90%" y1="0" x2="90%" y2="100%" stroke="#a855f7" stroke-width="1" stroke-dasharray="5,5"/>
+                        <line x1="0" y1="30%" x2="100%" y2="30%" stroke="#a855f7" stroke-width="1"/>
+                        <line x1="0" y1="70%" x2="100%" y2="70%" stroke="#a855f7" stroke-width="1" stroke-dasharray="10,10"/>
+                    </svg>
+                    
+                    <div class="relative z-10 max-w-xl">
+                        <div class="p-4 bg-purple-950/80 border border-purple-500/40 rounded-full inline-block text-purple-400 mb-4 shadow-[0_0_20px_rgba(168,85,247,0.3)]">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <h4 class="text-2xl font-black text-white mb-2 tracking-wide">羅屋築蹟 ~ 書院足跡</h4>
+                        <p class="text-sm text-purple-300 font-bold mb-4 bg-purple-950/50 px-3 py-1 rounded-full border border-purple-900/50 inline-block">四年級經典在地化課程架構</p>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-left mt-2">
+                            <div class="bg-slate-900/80 p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-purple-400 font-black block mb-1">單元一 & 二</span>
+                                <span class="text-sm font-bold text-slate-100">歷史與堂號</span>
+                            </div>
+                            <div class="bg-slate-900/80 p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-purple-400 font-black block mb-1">單元三 & 四</span>
+                                <span class="text-sm font-bold text-slate-100">藝術與閱讀</span>
+                            </div>
+                            <div class="bg-slate-900/80 p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-purple-400 font-black block mb-1">單元五 & 六</span>
+                                <span class="text-sm font-bold text-slate-100">走讀與手作</span>
+                            </div>
+                            <div class="bg-slate-900/80 p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-purple-400 font-black block mb-1">單元七 & 八</span>
+                                <span class="text-sm font-bold text-slate-100">諺語與成果</span>
+                            </div>
+                        </div>
+                        
+                        <p class="text-xs text-slate-500 mt-6 leading-relaxed">
+                            (此處為四年級架構圖預留空間，將於放置「四年級羅屋書院.png」後自動呈現。點擊此處可預覽框架結構。)
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 開啟架構圖燈箱
+        function openImageModal() {
+            const modal = document.getElementById('image-modal');
+            const mapContainer = document.getElementById('modal-image-container');
+            const imgEl = document.getElementById('curriculum-map');
+            
+            // 判定原圖片是否加載成功。若沒成功，則在燈箱顯示同樣的 Blueprint 樣式
+            if (imgEl) {
+                mapContainer.innerHTML = `
+                    <img src="class4.png" alt="四年級羅屋書院 課程架構圖" class="max-w-full max-h-[80vh] object-contain rounded-xl" onerror="showModalBlueprint(this)">
+                `;
+            } else {
+                showModalBlueprint();
+            }
+
+            modal.classList.remove('hidden');
+            modal.offsetHeight;
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+            document.body.style.overflow = 'hidden'; // 防止背景滾動
+        }
+
+        function showModalBlueprint(errImg) {
+            const mapContainer = document.getElementById('modal-image-container');
+            mapContainer.innerHTML = `
+                <div class="w-[85vw] max-w-5xl h-[65vh] bg-slate-950/90 border border-purple-500/20 rounded-xl flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                    <div class="p-5 bg-purple-950/80 border border-purple-500/40 rounded-full inline-block text-purple-400 mb-4 shadow-[0_0_30px_rgba(168,85,247,0.4)]">
+                        <svg class="w-16 h-16 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                    </div>
+                    <h3 class="text-3xl font-black text-white mb-2 tracking-widest glow-text-purple">四年級課程架構藍圖</h3>
+                    <p class="text-base text-purple-300 font-bold mb-6">羅屋築蹟 ~ 書院足跡 (總計 13 節課)</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl text-left">
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-white/5">
+                            <h4 class="font-black text-purple-300 mb-1">【第一階段：歷史美學底蘊】(單元一 ~ 三)</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">介紹羅屋歷史與「一堂四橫」古建築、豫章堂堂號來源、與精雕細琢的石雕與木雕工藝欣賞，培養美學敏感度。</p>
+                        </div>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-white/5">
+                            <h4 class="font-black text-purple-300 mb-1">【第二階段：閱讀探究思辨】(單元四 *新增)</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">新增深度閱讀：《建築裡的四格漫畫》探討雕樑畫棟中的民間故事、及《豫章堂羅屋書房》探源堂號祖先遷徙脈絡。</p>
+                        </div>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-white/5">
+                            <h4 class="font-black text-purple-300 mb-1">【第三階段：手作與走讀實踐】(單元五 ~ 六)</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">實地走訪上南片及水車與金城武樹，由仕龍老師親自導覽。隨後手作精美客家花布望遠鏡、剪紙吉祥窗花。</p>
+                        </div>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-white/5">
+                            <h4 class="font-black text-purple-300 mb-1">【第四階段：客語融合與發表】(單元七 ~ 八)</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">吟誦並體會客家勸學諺語（子弟不讀書好比無目珠）智慧，最終分組規劃Google Map導覽地圖並進行成果雙語發表。</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 關閉架構圖燈箱
+        function closeImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = ''; // 恢復滾動
+            }, 300);
+        }
+
+        // 綁定 Esc 鍵盤事件以快速關閉燈箱與彈窗
+        function setupEscKeyListener() {
+            window.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeImageModal();
+                    closeBookModal();
+                }
+            });
+        }
+
+        // 啟動應用
+        window.onload = init;
+    </script>
+</body>
+</html>
