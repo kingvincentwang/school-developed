@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>關西的小守護者：阿誠的家鄉大冒險 - 有聲書 (科技版)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang TC', 'Heiti TC', 'Microsoft JhengHei', sans-serif;
+            /* 深藍科技漸層背景 */
+            background: radial-gradient(circle at top right, #0f172a, #1e3a8a, #020617);
+            background-attachment: fixed;
+        }
+        
+        /* 玻璃質感自訂類別 */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        .glass-header {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(30, 58, 138, 0.4));
+            border-bottom: 1px solid rgba(147, 197, 253, 0.2);
+        }
+
+        .glass-button {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            backdrop-filter: blur(4px);
+        }
+        
+        .glass-button:hover:not(:disabled) {
+            background: rgba(56, 189, 248, 0.25);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        /* 內容切換動畫 (左右滑動) */
+        .page-transition {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .fade-out {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        .fade-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 滾動條美化 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.4); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 text-slate-100">
+
+    <!-- 主容器：玻璃質感 (橫版加寬) -->
+    <div class="max-w-5xl w-full glass-panel rounded-3xl overflow-hidden flex flex-col h-[90vh] md:h-[650px] relative">
+        
+        <!-- 頂部標題列 -->
+        <div class="glass-header p-4 flex items-center justify-center shadow-lg z-10">
+            <i class="fas fa-book-journal-whills text-cyan-400 text-2xl mr-3"></i>
+            <h1 class="text-xl md:text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 drop-shadow-sm">
+                關西的小守護者：阿誠的家鄉大冒險
+            </h1>
+        </div>
+
+        <!-- 書本內容區 -->
+        <div class="flex-grow overflow-hidden p-6 md:p-10 relative z-0" id="content-container">
+            <div id="page-content" class="page-transition fade-in flex flex-col md:flex-row h-full">
+                <!-- 圖片展示區 (左側，已縮小寬度比例為 1/3) -->
+                <div id="image-container" class="w-full md:w-1/3 h-48 md:h-full bg-black/30 rounded-2xl flex items-center justify-center mb-6 md:mb-0 md:mr-8 shadow-inner border border-blue-500/20 relative overflow-hidden group flex-shrink-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent opacity-50 z-10 pointer-events-none"></div>
+                    <!-- 本地圖片，加入 onerror 防呆 -->
+                    <img id="page-image" src="images/p01.png" alt="故事圖片" class="w-full h-full object-contain relative z-0" onerror="this.src='https://placehold.co/800x600/1e3a8a/38bdf8?text=Image+Not+Found'">
+                </div>
+                
+                <!-- 文字內容 (右側，已增加寬度比例為 2/3) -->
+                <div class="w-full md:w-2/3 flex flex-col overflow-y-auto h-full pr-2">
+                    <div id="text-container" class="text-lg md:text-2xl leading-relaxed md:leading-loose text-blue-50 tracking-wide text-justify font-light text-shadow-sm my-auto">
+                        <!-- 內容由 JS 動態載入 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 播放控制與導覽列 -->
+        <div class="bg-slate-900/60 backdrop-blur-xl border-t border-blue-500/20 p-4 md:p-6 z-10 flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+            
+            <!-- 選項與下載區 -->
+            <div class="flex justify-between items-center mb-4">
+                <label class="relative inline-flex items-center cursor-pointer group" title="開啟後，讀完當頁會自動翻到下一頁繼續唸">
+                    <input type="checkbox" id="auto-play-toggle" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-300 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500 peer-checked:after:bg-white shadow-inner"></div>
+                    <span class="ml-3 text-sm md:text-base font-medium text-cyan-200 group-hover:text-cyan-100 transition-colors">自動換頁播放</span>
+                </label>
+                
+                <button id="download-audio-btn" class="text-sm md:text-base text-cyan-300 glass-button px-3 py-2 rounded-lg flex items-center transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-download mr-2"></i> <span>下載本頁音檔</span>
+                </button>
+            </div>
+
+            <!-- 進度條 -->
+            <div class="w-full bg-slate-800 rounded-full h-1.5 mb-5 shadow-inner border border-white/5 overflow-hidden">
+                <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-cyan-400 h-1.5 rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(34,211,238,0.8)]" style="width: 10%;"></div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <!-- 上一頁按鈕 -->
+                <button id="prev-btn" class="glass-button text-cyan-200 p-2 md:px-4 md:py-2 rounded-lg flex items-center text-sm md:text-base font-bold disabled:opacity-30 disabled:cursor-not-allowed">
+                    <i class="fas fa-chevron-left mr-2"></i> 上一頁
+                </button>
+
+                <!-- 播放控制按鈕群 -->
+                <div class="flex space-x-4 items-center">
+                    <button id="stop-btn" class="w-10 h-10 md:w-12 md:h-12 glass-button text-cyan-200 rounded-full flex items-center justify-center shadow-sm" title="停止">
+                        <i class="fas fa-stop"></i>
+                    </button>
+                    
+                    <button id="play-btn" class="w-14 h-14 md:w-16 md:h-16 bg-cyan-500/30 border border-cyan-400 text-cyan-100 rounded-full flex items-center justify-center text-2xl hover:bg-cyan-400/50 transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(34,211,238,0.3)] disabled:opacity-50 disabled:cursor-wait" title="播放">
+                        <i class="fas fa-play ml-1"></i>
+                    </button>
+                    
+                    <button id="pause-btn" class="w-14 h-14 md:w-16 md:h-16 bg-blue-500/40 border border-blue-400 text-cyan-100 rounded-full items-center justify-center text-2xl hover:bg-blue-400/60 transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(59,130,246,0.3)] hidden" title="暫停">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                </div>
+
+                <!-- 下一頁按鈕 -->
+                <button id="next-btn" class="glass-button text-cyan-200 p-2 md:px-4 md:py-2 rounded-lg flex items-center text-sm md:text-base font-bold disabled:opacity-30 disabled:cursor-not-allowed">
+                    下一頁 <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+            </div>
+            
+            <!-- 頁碼顯示 -->
+            <div class="text-center text-xs md:text-sm text-cyan-500/70 mt-4 font-mono tracking-widest">
+                PAGE <span id="page-indicator">1 / 10</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示訊息 Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800/90 backdrop-blur-md border border-cyan-500/30 text-cyan-100 px-5 py-3 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] opacity-0 transition-opacity duration-300 pointer-events-none z-50 flex items-center">
+        <i class="fas fa-info-circle mr-3 text-cyan-400"></i>
+        <span id="toast-msg">提示訊息</span>
+    </div>
+
+    <script>
+        // 電子書內容資料
+        const bookData = [
+            {
+                imageDesc: "關西的小守護者故事封面",
+                text: "《關西的小守護者：阿誠的家鄉大冒險》\n作者：vincent wang"
+            },
+            {
+                imageDesc: "阿誠背著亮黃色背包跟著林老師在關西鎮街道上",
+                text: "陽光灑在關西鎮的街道上，小學三年級的阿誠背起亮黃色的背包，跟著林老師踏上了一場特別的家鄉探險。林老師笑著說：「今天我們要去尋找那些默默守護我們的人和神明喔！」阿誠好奇地睜大眼睛，手裡拿著筆記本，準備記下這趟冒險的每一個驚喜。"
+            },
+            {
+                imageDesc: "充滿古意木頭窗戶與深色瓦片的關西分駐所",
+                text: "他們來到了一棟充滿古意建築前，那是「關西分駐所」。這座建築有著漂亮的木頭窗戶和深色的瓦片。林老師解釋說：「這裡就像是小鎮的守衛室，以前叫作監視所，現在則是大家熟悉的警察局。它已經在這裡守護關西好久好久了。」阿誠覺得，這座老房子看起來既威嚴又親切。"
+            },
+            {
+                imageDesc: "林老師拿著泛黃老照片介紹分駐所旁的木造宿舍",
+                text: "林老師拿出一張泛黃的老照片，指著分駐所旁的木造宿舍說：「以前警察叔叔和他們的家人就住在這。這就是它的『前世』，負責管理治安；而現在，它變成了古蹟，讓更多人認識家鄉的歷史，這是它的『今生』。」阿誠想像著以前的小朋友在這裡奔跑的樣子，心裡暖暖的。"
+            },
+            {
+                imageDesc: "林老師教導阿誠在石爺亭前合掌祭拜",
+                text: "接著，他們來到了神祕的「石爺亭」。這裡供奉著大大小小的石頭，祂們就是守護小孩平安成長的「石爺」。林老師教阿誠合掌祭拜，並說：「石爺是我們在地的守護神，大家都會來祈求『保庇』。」阿誠認真地閉上眼睛，在心裡默默許下願望。"
+            },
+            {
+                imageDesc: "阿誠小心翼翼地將紅線穿過平安符製作護心符",
+                text: "在石爺亭旁，林老師帶著阿誠動手製作「護心符」。阿誠小心翼翼地將紅線穿過平安符，打上一個漂亮的結。林老師說：「這條紅線代表了石爺的牽掛，戴上它，就像隨時都有守護神在身邊保護你喔！」阿誠開心地將護心符掛在脖子上，覺得勇氣倍增。"
+            },
+            {
+                imageDesc: "林老師指著綠油油稻田邊的小石廟伯公",
+                text: "路過一片綠油油的稻田時，林老師指著田邊的小石廟說：「那是『伯公』，也就是大家說的土地公。伯公守護著大地，讓農作物平安長大，是農民最重要的朋友。」阿誠點點頭，心想關西鎮真的到處都有溫暖的守護者呢。"
+            },
+            {
+                imageDesc: "阿誠漫步在石店尾老街看著紅磚色的道路",
+                text: "他們漫步到石店尾老街，紅磚色的道路蜿蜒在古老的店鋪之間。這裡曾是關西最熱鬧的地方，現在則是充滿浪漫氛圍的散步祕境。阿誠看著路邊的石磚圖案，感覺自己彷彿穿越了時空，走進了阿公阿嬤的小時候。"
+            },
+            {
+                imageDesc: "王警官開著巡邏車在浪漫台三線上跟阿誠打招呼",
+                text: "走在浪漫台三線上，一台閃著藍紅燈光的巡邏車緩緩駛過。王警官降下車窗，親切地跟阿誠打招呼。林老師說：「看！警察叔叔就是我們社區的守護者，他們日夜不停地巡邏，讓每戶人家都能安心睡覺，這就是『守戶』的精神。」"
+            },
+            {
+                imageDesc: "林老師輕拍阿誠肩膀一起走在回家的路上",
+                text: "林老師輕輕拍拍阿誠的肩膀說：「阿誠，現在你也是家鄉的小守護者了。只要你愛這片土地，就是在守護它喔！」阿誠用力地點點頭，和林老師一起走向回家的路。他知道，這場關於守護的冒險，將會永遠留在他的心裡。"
+            }
+        ];
+
+        // 系統狀態
+        let currentPageIndex = 0;
+        let isPlaying = false;
+        let isAutoPlayEnabled = true;
+
+        // 音訊實例
+        const audioPlayer = new Audio();
+        
+        // DOM 元素
+        const contentContainer = document.getElementById('page-content');
+        const textContainer = document.getElementById('text-container');
+        const pageImage = document.getElementById('page-image');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const pageIndicator = document.getElementById('page-indicator');
+        const progressBar = document.getElementById('progress-bar');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-msg');
+        const autoPlayToggle = document.getElementById('auto-play-toggle');
+        const downloadAudioBtn = document.getElementById('download-audio-btn');
+
+        // 音訊播放完畢事件：自動換頁邏輯
+        audioPlayer.onended = () => {
+            if (isAutoPlayEnabled && currentPageIndex < bookData.length - 1) {
+                // 自動換到下一頁並繼續播放
+                nextPage(true); 
+            } else {
+                // 停止播放狀態
+                isPlaying = false;
+                updatePlayButtonsUI();
+            }
+        };
+
+        // 如果音檔載入錯誤 (例如找不到檔案)
+        audioPlayer.onerror = () => {
+            console.error("無法載入或播放音檔");
+            showToast("找不到對應的本地音檔！");
+            isPlaying = false;
+            updatePlayButtonsUI();
+        };
+
+        autoPlayToggle.addEventListener('change', (e) => {
+            isAutoPlayEnabled = e.target.checked;
+        });
+
+        // 渲染頁面內容
+        function renderPage() {
+            contentContainer.classList.remove('fade-in');
+            contentContainer.classList.add('fade-out');
+
+            setTimeout(() => {
+                const pageData = bookData[currentPageIndex];
+                
+                // 設定本地圖片路徑 (p01.png ~ p10.png)
+                const pageNum = String(currentPageIndex + 1).padStart(2, '0');
+                pageImage.src = `images/p${pageNum}.png`;
+                pageImage.alt = pageData.imageDesc;
+                
+                textContainer.innerHTML = pageData.text.replace(/\n/g, '<br><br>');
+                pageIndicator.innerText = `${currentPageIndex + 1} / ${bookData.length}`;
+                
+                const progressPercentage = ((currentPageIndex + 1) / bookData.length) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+
+                prevBtn.disabled = currentPageIndex === 0;
+                nextBtn.disabled = currentPageIndex === bookData.length - 1;
+
+                contentContainer.classList.remove('fade-out');
+                contentContainer.classList.add('fade-in');
+            }, 200); 
+        }
+
+        // --- 播放與控制邏輯 (本地音檔) ---
+
+        async function playAudio() {
+            // 如果是暫停狀態，直接恢復播放
+            if (audioPlayer.src && audioPlayer.paused && audioPlayer.currentTime > 0) {
+                await audioPlayer.play();
+                isPlaying = true;
+                updatePlayButtonsUI();
+                return;
+            }
+
+            try {
+                // 設定本地音檔路徑 (01.wav ~ 10.wav)
+                const pageNum = String(currentPageIndex + 1).padStart(2, '0');
+                const audioUrl = `wav/${pageNum}.wav`;
+                
+                // 載入並播放 (如果來源不同才重新指定)
+                if (!audioPlayer.src.endsWith(audioUrl)) {
+                    audioPlayer.src = audioUrl;
+                }
+                
+                await audioPlayer.play();
+                isPlaying = true;
+                updatePlayButtonsUI();
+
+            } catch (error) {
+                console.error("Audio playback failed:", error);
+                showToast("音檔播放失敗，請確認 wav 資料夾下是否有對應檔案。");
+                isPlaying = false;
+                updatePlayButtonsUI();
+            }
+        }
+
+        function pauseAudio() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+                updatePlayButtonsUI();
+            }
+        }
+
+        function stopAudio() {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            isPlaying = false;
+            updatePlayButtonsUI();
+        }
+
+        function updatePlayButtonsUI() {
+            if (isPlaying) {
+                playBtn.classList.add('hidden');
+                pauseBtn.classList.remove('hidden');
+                pauseBtn.style.display = 'flex'; 
+            } else {
+                pauseBtn.classList.add('hidden');
+                playBtn.classList.remove('hidden');
+                playBtn.style.display = 'flex';
+            }
+        }
+
+        // --- 換頁邏輯 ---
+
+        function prevPage() {
+            if (currentPageIndex > 0) {
+                currentPageIndex--;
+                handlePageChange();
+            }
+        }
+
+        function nextPage(autoContinue = false) {
+            if (currentPageIndex < bookData.length - 1) {
+                currentPageIndex++;
+                handlePageChange(autoContinue);
+            }
+        }
+
+        function handlePageChange(autoContinue = false) {
+            const wasPlaying = isPlaying;
+            stopAudio(); 
+            renderPage();
+            
+            // 若為自動播放串聯，或原先就處於播放狀態，切換後自動開始播下一頁
+            if (wasPlaying || autoContinue) {
+                // 給一點點視覺切換緩衝時間再發聲
+                setTimeout(() => {
+                    playAudio();
+                }, 400);
+            }
+        }
+
+        // --- 下載邏輯 ---
+
+        async function downloadCurrentPageAudio() {
+            const pageNum = String(currentPageIndex + 1).padStart(2, '0');
+            const audioUrl = `wav/${pageNum}.wav`;
+            
+            try {
+                // 建立下載連結
+                const a = document.createElement('a');
+                a.href = audioUrl;
+                a.download = `關西的小守護者_第${pageNum}頁.wav`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                showToast(`已開始下載第 ${currentPageIndex + 1} 頁音檔！`);
+
+            } catch (error) {
+                showToast("下載失敗，請檢查檔案是否存在。");
+            }
+        }
+
+        function showToast(msg) {
+            toastMsg.innerText = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 3000);
+        }
+
+        // 事件綁定
+        prevBtn.addEventListener('click', () => prevPage());
+        nextBtn.addEventListener('click', () => nextPage());
+        playBtn.addEventListener('click', playAudio);
+        pauseBtn.addEventListener('click', pauseAudio);
+        stopBtn.addEventListener('click', stopAudio);
+        downloadAudioBtn.addEventListener('click', downloadCurrentPageAudio);
+
+        // 鍵盤左右鍵支援換頁
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevPage();
+            if (e.key === 'ArrowRight') nextPage();
+        });
+
+        // 初始化
+        window.onload = () => {
+            renderPage();
+        };
+
+    </script>
+</body>
+</html>
