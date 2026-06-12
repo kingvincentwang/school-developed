@@ -427,7 +427,7 @@
       <div class="modal-grade" id="modalGrade"></div>
       <div class="modal-title" id="modalTitle"></div>
       <div id="modalContent"></div>
-      <button class="close-btn" onclick="closeModal()">收起卷軸，繼續旅程 📜</button>
+      <button class="close-btn" onclick="closeModal()">收起卷軸，前往教學網頁 📜</button>
     </div>
     <div class="scroll-bottom"></div>
   </div>
@@ -468,7 +468,8 @@ var locations = [
     ]
   },
   { id:3, grade:'三年級', name:'關西分駐所', x:74, y:42,
-    content:[
+		url: './3class/arc-class3.html',
+		content:[
       { title:'🏢 建築特色', text:'關西分駐所（原關西警察官吏派出所）是一棟典型的日治時期木造建築，建於1920年代。建築採用台灣檜木興建，外觀為和洋折衷式風格，融合日式建築的格局與西洋殖民地建築的廊道設計。建築立面設有寬闊的走廊，木造格柵窗透過光線，在室內形成美麗的光影變化。屋頂為四坡式，覆蓋黑色瓦片，整體散發出莊嚴穩重的氣質。' },
       { title:'📖 歷史與傳說', text:'這棟建築見證了日治時期台灣的歷史。日本統治台灣期間（1895-1945年），在各地設立警察派出所作為地方行政中心，維持社會秩序並推行各項政策。關西分駐所至今仍保存完整，是新竹縣少數保留下來的日治時期警察廳舍之一，已被列為歷史建築。老一輩居民常說，從這棟建築的窗格望出去，可以看見整個關西街的變遷。' },
       { title:'🎓 小知識', text:'「和洋折衷」建築是日治時期台灣最常見的建築樣式，將日本傳統木造技術與西洋建築元素結合，在台灣各地留下了許多珍貴的歷史建築。台灣檜木因其耐濕防蟲的特性，是日治時期建築的重要材料。' }
@@ -626,7 +627,14 @@ function showModal(loc) {
 }
 
 function closeModal() {
+  var loc = locations[currentStep];
   document.getElementById('modalOverlay').classList.remove('show');
+
+  // 如果這個景點有設定 url，開啟教學網頁
+  if (loc && loc.url) {
+    window.open(loc.url, '_blank');
+  }
+
   if (currentStep >= 6) {
     setTimeout(function() { document.getElementById('finishBanner').classList.add('show'); }, 500);
     return;
