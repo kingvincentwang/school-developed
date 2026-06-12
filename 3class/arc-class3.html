@@ -249,6 +249,24 @@
                 </a>
             </div>
         </section>
+		<!-- 課程架構圖區塊 -->
+		<section class="mb-10 relative z-20">
+			<h2 class="text-2xl font-bold text-white flex items-center border-l-4 border-cyan-500 pl-3 mb-5 glow-text">
+				<svg class="w-6 h-6 mr-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+				</svg>
+				課程架構圖
+			</h2>
+			<div class="glass-panel rounded-2xl p-4 md:p-6 overflow-hidden">
+				<img id="lightbox-img" src="class3.png" 
+					alt="三年級課程架構圖" 
+					class="w-full h-auto rounded-xl object-contain cursor-zoom-in hover:opacity-90 transition-opacity duration-300 border border-white/10"
+					onclick="openImageModal(this.src)"
+					onerror="this.onerror=null; this.src='class3.png';"
+				>
+				<p class="text-center text-slate-500 text-xs mt-3">點擊圖片可放大檢視</p>
+			</div>
+		</section>
 
         <!-- 單元課程詳細內容 (Tab 切換區) -->
         <section class="mb-0 relative z-20">
@@ -278,7 +296,7 @@
             </button>
             
             <!-- 燈箱圖片主體 -->
-            <img src="三年級分駐所.png" alt="三年級分駐所 課程架構圖" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/10" onerror="this.onerror=null; this.src='https://placehold.co/1200x675/0f172a/38bdf8?text=三年級分駐所課程架構圖';">
+            <img src="class3.png" alt="三年級分駐所 課程架構圖" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/10" onerror="this.onerror=null; this.src='https://placehold.co/1200x675/0f172a/38bdf8?text=三年級分駐所課程架構圖';">
             
             <p class="text-slate-400 text-sm mt-4 tracking-wider text-center bg-slate-900/80 px-4 py-2 rounded-full border border-white/5">
                 點擊任意處或按下 <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-xs">Esc</kbd> 即可返回網頁
@@ -604,15 +622,17 @@
         }
 
         // 開啟架構圖燈箱
-        function openImageModal() {
-            const modal = document.getElementById('image-modal');
-            modal.classList.remove('hidden');
-            // 強制瀏覽器重繪以啟動 CSS 動畫
-            modal.offsetHeight;
-            modal.classList.remove('opacity-0');
-            modal.classList.add('opacity-100');
-            document.body.style.overflow = 'hidden'; // 防止背景滾動
-        }
+        function openImageModal(src) {
+			const modal = document.getElementById('image-modal');
+			if (src) {
+				document.getElementById('lightbox-img').src = src;
+			}
+			modal.classList.remove('hidden');
+			modal.offsetHeight;
+			modal.classList.remove('opacity-0');
+			modal.classList.add('opacity-100');
+			document.body.style.overflow = 'hidden';
+		}
 
         // 關閉架構圖燈箱
         function closeImageModal() {
