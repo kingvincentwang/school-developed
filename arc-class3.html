@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三年級課程：守護與守戶~關西分駐所</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        tech: {
+                            dark: '#020617',    // 極深藍/黑
+                            panel: '#0f172a',   // 稍微亮的深藍面板
+                            blue: '#1e3a8a',    // 科技藍
+                            cyan: '#06b6d4',    // 霓虹青
+                            glow: '#38bdf8',    // 發光亮藍
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020617; /* 極深藍背景 */
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* 網格背景增加科技感 */
+        .tech-grid {
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* 玻璃質感共用類別 */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* 翻轉卡片效果 - 針對玻璃質感微調 */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.05);
+        }
+
+        .flip-card-front {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 58, 138, 0.6));
+            backdrop-filter: blur(8px);
+            color: #38bdf8;
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.8), rgba(30, 58, 138, 0.9));
+            backdrop-filter: blur(8px);
+            color: white;
+            transform: rotateY(180deg);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 隱藏捲軸但保留滾動功能 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 科技發光效果 */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen pb-16 tech-grid">
+
+    <!-- 背景環境光暈 (營造立體空間感) -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-900/20 blur-[120px]"></div>
+        <div class="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-cyan-900/20 blur-[150px]"></div>
+        <div class="absolute top-[30%] left-[60%] w-[40vw] h-[40vw] rounded-full bg-indigo-900/20 blur-[120px]"></div>
+    </div>
+
+    <header class="relative z-10 pt-16 pb-12 px-4 mb-8 border-b border-white/10 glass-panel">
+        <div class="max-w-5xl mx-auto relative z-10 text-center">
+            <span class="inline-block bg-cyan-950/50 border border-cyan-500/50 text-cyan-300 text-sm font-bold px-4 py-1.5 rounded-full mb-5 shadow-[0_0_10px_rgba(6,182,212,0.3)] backdrop-blur-md">
+                <span class="inline-block w-2 h-2 rounded-full bg-cyan-400 mr-2 animate-pulse"></span>
+                三年級在地化課程 (總計 17 節課)
+            </span>
+            <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-wide text-white glow-text">
+                守護與守戶 <span class="text-cyan-400 font-light">~ 關西分駐所</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
+                結合歷史建築、浪漫臺三線、石爺亭信仰，透過實地踏查與客語實作，培養孩子對家鄉的愛與認同。
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 relative z-10">
+        
+        <!-- 課前翻翻卡小互動 -->
+        <section class="mb-14">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white flex items-center border-l-4 border-cyan-500 pl-3 glow-text">
+                    <svg class="w-6 h-6 mr-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    課前小互動：客語及概念翻翻卡
+                </h2>
+                <span class="text-sm text-cyan-500/80 bg-cyan-950/30 px-3 py-1 rounded-full border border-cyan-900/50">點擊卡片翻轉</span>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+                <!-- 卡片 1 -->
+                <div class="flip-card group" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front group-hover:border-cyan-400/50 transition-colors">
+                            <svg class="w-8 h-8 mb-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <h3 class="text-xl font-bold text-slate-100 tracking-wider">關西分駐所</h3>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="font-bold text-xl mb-2 text-white glow-text">歷史建築</p>
+                            <p class="text-sm text-cyan-50 leading-relaxed px-2">見證地方歷史，過去守護社區治安的中心。</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 卡片 2 -->
+                <div class="flip-card group" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front group-hover:border-cyan-400/50 transition-colors">
+                            <svg class="w-8 h-8 mb-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                            <h3 class="text-xl font-bold text-slate-100 tracking-wider">伯公 / 石爺</h3>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="font-bold text-xl mb-2 text-white glow-text">在地守護神</p>
+                            <p class="text-sm text-cyan-50 leading-relaxed px-2">客家文化中，田頭田尾守護鄉里的重要信仰。</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 卡片 3 -->
+                <div class="flip-card group" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front group-hover:border-cyan-400/50 transition-colors">
+                            <svg class="w-8 h-8 mb-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                            <h3 class="text-xl font-bold text-slate-100 tracking-wider">浪漫臺三線</h3>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="font-bold text-xl mb-2 text-white glow-text">輕旅散策</p>
+                            <p class="text-sm text-cyan-50 leading-relaxed px-2">串聯客庄景點的觀光大道，體驗在地文化。</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 卡片 4 -->
+                <div class="flip-card group" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front group-hover:border-cyan-400/50 transition-colors">
+                            <svg class="w-8 h-8 mb-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
+                            <h3 class="text-xl font-bold text-slate-100 tracking-wider">護心符</h3>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="font-bold text-xl mb-2 text-white glow-text">祈福與保庇</p>
+                            <p class="text-sm text-cyan-50 leading-relaxed px-2">將守護的意涵轉化為實體創作，寫下客語祝福。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 線上互動繪本精選推薦區塊 -->
+        <section class="mb-10 relative z-20">
+            <div class="glass-panel p-5 rounded-2xl border-l-4 border-l-cyan-400 flex flex-col md:flex-row items-center justify-between gap-4 overflow-hidden relative group">
+                <!-- 背景微光裝飾 -->
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                
+                <div class="flex items-center gap-4 relative z-10">
+                    <div class="p-3 bg-cyan-950/80 border border-cyan-500/30 rounded-xl text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.2)] shrink-0">
+                        <!-- 動態書本圖示 -->
+                        <svg class="w-8 h-8 animate-pulse text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 text-xs font-black text-cyan-400 tracking-wider uppercase bg-cyan-950/60 border border-cyan-500/30 px-2.5 py-0.5 rounded-full">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                            推薦教材
+                        </span>
+                        <h3 class="text-lg md:text-xl font-bold text-white mt-1.5">繪本故事：關西的小守護者~阿誠的家鄉大冒險</h3>
+                        <p class="text-sm text-slate-400 mt-0.5">專為三年級開發的在地守護神故事，融入豐富插圖與客語共讀體驗！</p>
+                    </div>
+                </div>
+                
+                <a href="./storybook/class3storybook.html" target="_blank" class="relative z-10 w-full md:w-auto text-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transition-all duration-300 flex items-center justify-center gap-2 shrink-0 group-hover:scale-[1.02]">
+                    <span>進入互動繪本故事</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- 單元課程詳細內容 (Tab 切換區) -->
+        <section class="mb-0 relative z-20">
+            <h2 class="text-2xl font-bold text-white flex items-center border-l-4 border-cyan-500 pl-3 mb-5 glow-text">
+                <svg class="w-6 h-6 mr-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                單元課程內容
+            </h2>
+            
+            <!-- 導航標籤列 -->
+            <div class="flex overflow-x-auto no-scrollbar gap-2 pb-0 relative" id="tabs-container">
+                <!-- JS動態生成 -->
+            </div>
+        </section>
+
+        <section id="content-container" class="min-h-[400px] relative z-10 -mt-[1px]">
+            <!-- JS動態生成卡片內容 -->
+        </section>
+
+    </main>
+
+    <!-- 圖片放大檢視 Lightbox 燈箱視窗 -->
+    <div id="image-modal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 md:p-8 transition-opacity duration-300 opacity-0" onclick="closeImageModal()">
+        <div class="relative max-w-7xl w-full max-h-[90vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+            <!-- 關閉按鈕 -->
+            <button class="absolute -top-12 right-0 text-slate-400 hover:text-white transition-colors p-2 bg-slate-900/60 rounded-full border border-white/10" onclick="closeImageModal()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <!-- 燈箱圖片主體 -->
+            <img src="三年級分駐所.png" alt="三年級分駐所 課程架構圖" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/10" onerror="this.onerror=null; this.src='https://placehold.co/1200x675/0f172a/38bdf8?text=三年級分駐所課程架構圖';">
+            
+            <p class="text-slate-400 text-sm mt-4 tracking-wider text-center bg-slate-900/80 px-4 py-2 rounded-full border border-white/5">
+                點擊任意處或按下 <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-xs">Esc</kbd> 即可返回網頁
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 定義課程資料
+        const curriculumData = [
+            {
+                id: "unit1",
+                title: "單元一：話說頭擺~分駐所老故事 (4節)",
+                shortTitle: "單元一：分駐所老故事",
+                lessons: [
+                    {
+                        period: "第一節",
+                        name: "我們居住的關西鎮",
+                        content: "關西的各式場所與設施 (配合三下社會課第一單元)",
+                        method: "班級教學",
+                        objective: "能認識家鄉關西鎮主要的場所與設施，並了解其基本功能。",
+                        hakka: "學習關西鎮主要地點的客語說法。",
+                        output: "小組蒐集資料討論、發表"
+                    },
+                    {
+                        period: "第二節",
+                        name: "分駐所故事多分駐所古今事",
+                        content: "分駐所故事多分駐所古今事",
+                        method: "班級教學，進行小組討論、發表",
+                        objective: "能了解分駐所的歷史沿革，並說出其古今故事。",
+                        hakka: "嘗試使用淺易的客語生活用語進行討論。",
+                        output: "無特定產出"
+                    },
+                    {
+                        period: "第六節",
+                        name: "分駐所前世與今生",
+                        content: "分駐所前世與今生",
+                        method: "實地踏查、紀錄",
+                        objective: "能透過實地踏查分駐所，記錄其建築結構或歷史變遷的特色。",
+                        hakka: "學習用客語名詞紀錄建築或景物的特色。",
+                        output: "無特定產出"
+                    },
+                    {
+                        period: "第七節",
+                        name: "分駐所前世與今生",
+                        content: "分駐所前世與今生",
+                        method: "實地踏查、紀錄",
+                        objective: "能持續紀錄分駐所的今昔面貌，並比較其差異。",
+                        hakka: "練習用客語描述今昔景物的變化。",
+                        output: "無特定產出"
+                    }
+                ]
+            },
+            {
+                id: "unit2",
+                title: "單元二：建築與文化意涵 (2節)",
+                shortTitle: "單元二：建築與文化意涵",
+                lessons: [
+                    {
+                        period: "第三節",
+                        name: "護心符工作坊——石爺亭",
+                        content: "護心符工作坊——石爺亭",
+                        method: "實地踏查、發表、紀錄",
+                        objective: "能透過實地踏查石爺亭，認識在地的守護神信仰及其文化意涵。",
+                        hakka: "學習在地守護神（如「伯公」、「石爺亭」）的客語稱呼與意義。",
+                        output: "無特定產出"
+                    },
+                    {
+                        period: "第四節",
+                        name: "護心符設計",
+                        content: "護心符設計",
+                        method: "設計、彩繪、發表、實作",
+                        objective: "能構思與設計具備「守護」意義的護心符，並運用繪圖用具進行實作。",
+                        hakka: "在護心符上以客語寫下或唸出祈福、保庇的字句。",
+                        output: "無特定產出"
+                    }
+                ]
+            },
+            {
+                id: "unit3",
+                title: "單元三：輕旅散策~老街與臺三線 (3節)",
+                shortTitle: "單元三：老街與臺三線",
+                lessons: [
+                    {
+                        period: "第五節",
+                        name: "浪漫臺三線觀光大使小小規劃師",
+                        content: "浪漫臺三線觀光大使小小規劃師",
+                        method: "設計、彩繪、發表、實作",
+                        objective: "能透過蒐集資料，歸納並規劃出浪漫臺三線上的關西鎮觀光景點。",
+                        hakka: "在規劃路線時，將客語地名或客語介紹納入考量。",
+                        output: "列出景點歸納"
+                    },
+                    {
+                        period: "第九節",
+                        name: "走讀分駐所~分駐所與石店尾老街散策規劃",
+                        content: "走讀分駐所~分駐所與石店尾老街散策規劃",
+                        method: "實地踏查、紀錄",
+                        objective: "能規劃走讀分駐所與石店尾老街的路線，並學習將紀錄內容搭配客語句子呈現。",
+                        hakka: "實地紀錄內容必須搭配客語句子呈現。",
+                        output: "內容搭配客語句子"
+                    },
+                    {
+                        period: "第十節",
+                        name: "景點特派員",
+                        content: "景點特派員",
+                        method: "小組討論、實地踏查、客語發表",
+                        objective: "能深入探查景點並進行蒐集資料，且能運用客語進行口頭發表。",
+                        hakka: "學生需運用客語，流暢地介紹所探查的景點。(核心)",
+                        output: "景點深入搜查"
+                    }
+                ]
+            },
+            {
+                id: "unit4",
+                title: "單元四：實作與客語應用 (6節)",
+                shortTitle: "單元四：實作與客語應用",
+                lessons: [
+                    {
+                        period: "第八節",
+                        name: "浪漫臺三線觀光大使旅遊手冊設計",
+                        content: "浪漫臺三線觀光大使旅遊手冊設計",
+                        method: "設計、彩繪、發表、實作",
+                        objective: "能決定旅遊手冊的呈現內容，並透過設計與實作完成部分手冊。",
+                        hakka: "旅遊手冊中需使用客語標註重要資訊或使用客語諺語作為引言。",
+                        output: "訂定呈現內容"
+                    },
+                    {
+                        period: "第十一節",
+                        name: "發現關西老街散策觀光地圖繪製１",
+                        content: "發現關西老街散策觀光地圖繪製１",
+                        method: "設計、彩繪、發表、實作",
+                        objective: "能將走讀的路線與景點特色，繪製成觀光地圖。",
+                        hakka: "地圖上重要地標需同時標註客語發音或名稱。",
+                        output: "繪製地圖"
+                    },
+                    {
+                        period: "第十二節",
+                        name: "發現關西老街散策觀光地圖設計２",
+                        content: "發現關西老街散策觀光地圖設計２",
+                        method: "設計、彩繪、發表、實作",
+                        objective: "能完成觀光地圖的設計，並確保其具有實用性與美感。",
+                        hakka: "確保地圖的視覺設計融入客家花布等文化元素。",
+                        output: "繪製地圖"
+                    },
+                    {
+                        period: "第十三節",
+                        name: "浪漫臺三線觀光小書１",
+                        content: "浪漫臺三線觀光小書１",
+                        method: "班級教學，進行設計、彩繪、發表、實作",
+                        objective: "能將課程所學的觀光資訊彙整，開始進行觀光小書的設計與製作。",
+                        hakka: "小書中需包含一段或數段的客語介紹文章。",
+                        output: "無特定產出"
+                    },
+                    {
+                        period: "第十四節",
+                        name: "浪漫臺三線觀光小書２",
+                        content: "浪漫臺三線觀光小書２",
+                        method: "班級教學，進行設計、彩繪、發表、實作",
+                        objective: "能完成觀光小書的實體製作，展現設計實作的能力。",
+                        hakka: "確保觀光小書的最終文字校對含有正確的客語詞彙。",
+                        output: "無特定產出"
+                    },
+                    {
+                        period: "第十五節",
+                        name: "浪漫臺三線觀光小書成果展",
+                        content: "浪漫臺三線觀光小書成果展",
+                        method: "客語發表、成果展演",
+                        objective: "能運用客語進行觀光小書的成果發表，展現其學習成果。",
+                        hakka: "成果發表必須全程或大部分使用客語進行。(核心)",
+                        output: "觀光手冊"
+                    }
+                ]
+            },
+            {
+                id: "unit5",
+                title: "單元五：閱讀與延伸 (2節)",
+                shortTitle: "單元五：閱讀與延伸",
+                lessons: [
+                    {
+                        period: "第十六節",
+                        name: "閱讀：土地與在地的守護神",
+                        content: "建議讀本：繪本《田頭田尾土地公》",
+                        method: "班級教學，繪本共讀、客語問答、心得發表",
+                        objective: "能透過閱讀認識客家文化中土地公（伯公）的由來與信仰。學習運用客語詞彙討論「守護」的意義。",
+                        hakka: "運用客語詞彙（如伯公、祈福）討論讀本內容。",
+                        output: "學生發表閱讀心得，並能說出相關客語詞彙。"
+                    },
+                    {
+                        period: "第十七節",
+                        name: "閱讀：分駐所的日常",
+                        content: "建議讀本：關西分駐所歷史短文或地方特刊",
+                        method: "班級教學，閱讀短文、小組討論、角色扮演",
+                        objective: "能理解關西分駐所（或警察）在社區中扮演的「守護」功能，並了解其工作內容。",
+                        hakka: "學生在情境模擬或口語發表時，嘗試使用客語表達守護或求助的簡單句型。",
+                        output: "學生以書中所述內容，進行小組情境模擬或口語發表。"
+                    }
+                ]
+            }
+        ];
+
+        let currentUnitId = curriculumData[0].id;
+
+        // 在資料中為第十六節課（土地與在地的守護神）加入繪本故事連結
+        curriculumData[4].lessons[0].link = "./storybook/class3storybook.html";
+
+        function init() {
+            renderTabs();
+            renderContent(currentUnitId);
+            setupEscKeyListener();
+        }
+
+        // 渲染切換標籤 (玻璃質感)
+        function renderTabs() {
+            const tabsContainer = document.getElementById('tabs-container');
+            tabsContainer.innerHTML = '';
+
+            curriculumData.forEach((unit, index) => {
+                const btn = document.createElement('button');
+                const isActive = unit.id === currentUnitId;
+                
+                // 動態設置按鈕樣式 (Tech Glassmorphism)
+                let baseClasses = "whitespace-nowrap px-6 py-3 rounded-t-lg font-bold text-sm transition-all duration-300 ease-in-out backdrop-blur-md border border-b-0 ";
+                
+                if (isActive) {
+                    btn.className = baseClasses + "bg-cyan-900/40 text-cyan-300 border-cyan-500/50 shadow-[0_-4px_15px_rgba(6,182,212,0.2)] relative z-20";
+                } else {
+                    btn.className = baseClasses + "bg-slate-800/30 text-slate-400 border-white/5 hover:bg-slate-700/50 hover:text-cyan-200 hover:border-cyan-500/30";
+                }
+                
+                btn.textContent = unit.shortTitle;
+                btn.onclick = () => {
+                    currentUnitId = unit.id;
+                    renderTabs(); 
+                    renderContent(unit.id);
+                };
+                tabsContainer.appendChild(btn);
+            });
+        }
+
+        function renderContent(unitId) {
+            const container = document.getElementById('content-container');
+            const unitData = curriculumData.find(u => u.id === unitId);
+            
+            if (!unitData) return;
+
+            // 內容區塊主體 (Glass Panel)
+            let html = `
+                <div class="fade-in glass-panel rounded-b-xl rounded-tr-xl p-6 lg:p-8 relative z-10 border-t-cyan-500/50">
+                    <h3 class="text-xl md:text-2xl font-black text-white mb-8 border-b border-white/10 pb-4 flex items-center">
+                        <span class="w-2 h-8 bg-cyan-500 rounded-full mr-3 shadow-[0_0_10px_rgba(6,182,212,0.8)]"></span>
+                        ${unitData.title}
+                    </h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            `;
+
+            unitData.lessons.forEach(lesson => {
+                // 每節課的卡片 (Dark Glass Card)
+                html += `
+                    <div class="bg-slate-900/40 border border-white/10 rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 relative overflow-hidden group shadow-lg hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] backdrop-blur-sm">
+                        <!-- 裝飾邊條 (Neon glow effect) -->
+                        <div class="absolute left-0 top-0 w-1 h-full bg-blue-900/50 group-hover:bg-cyan-400 transition-colors duration-500 shadow-[0_0_10px_rgba(6,182,212,0)] group-hover:shadow-[0_0_15px_rgba(6,182,212,1)]"></div>
+                        
+                        <div class="flex flex-wrap items-center justify-between mb-4 pl-3 gap-2">
+                            <span class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-[0_0_8px_rgba(6,182,212,0.2)]">
+                                ${lesson.period}
+                            </span>
+                            <span class="text-xs font-medium text-slate-300 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full">
+                                ${lesson.method}
+                            </span>
+                        </div>
+                        
+                        <h4 class="text-lg lg:text-xl font-bold text-slate-100 mb-3 pl-3 tracking-wide group-hover:text-cyan-200 transition-colors">${lesson.name}</h4>
+                        <p class="text-sm text-slate-400 mb-5 pl-3 border-l-2 border-slate-700 ml-3 leading-relaxed">
+                            ${lesson.content}
+                        </p>
+
+                        <div class="space-y-4 mt-5 bg-slate-950/50 rounded-lg p-4 border border-white/5">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-400 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <div>
+                                    <span class="text-xs font-bold text-slate-500 block tracking-widest uppercase mb-1">學習目標</span>
+                                    <span class="text-sm font-medium text-slate-200 leading-relaxed">${lesson.objective}</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start bg-blue-900/20 p-3 rounded-lg border border-blue-500/20">
+                                <svg class="w-5 h-5 text-cyan-400 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                                <div>
+                                    <span class="text-xs font-bold text-cyan-500 block tracking-widest uppercase mb-1">強化客語元素</span>
+                                    <span class="text-sm font-bold text-cyan-100 leading-relaxed">${lesson.hakka}</span>
+                                </div>
+                            </div>
+                            
+                            ${lesson.output !== "無特定產出" ? `
+                            <div class="flex items-start mt-3 p-3">
+                                <svg class="w-5 h-5 text-indigo-400 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path></svg>
+                                <div>
+                                    <span class="text-xs font-bold text-slate-500 block tracking-widest uppercase mb-1">預期產出</span>
+                                    <span class="text-sm font-medium text-indigo-300 leading-relaxed">${lesson.output}</span>
+                                </div>
+                            </div>
+                            ` : ''}
+
+                            <!-- 若課堂資料帶有繪本連結，則動態渲染發光按鈕 -->
+                            ${lesson.link ? `
+                            <div class="mt-4 pt-3 border-t border-white/5 flex justify-end">
+                                <a href="${lesson.link}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/40 hover:to-blue-500/40 text-cyan-300 hover:text-white border border-cyan-500/30 hover:border-cyan-400/50 text-xs font-bold rounded-lg transition-all duration-300 shadow-[0_0_10px_rgba(6,182,212,0.1)]">
+                                    <span>開啟線上互動繪本</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </a>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        // 開啟架構圖燈箱
+        function openImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.remove('hidden');
+            // 強制瀏覽器重繪以啟動 CSS 動畫
+            modal.offsetHeight;
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+            document.body.style.overflow = 'hidden'; // 防止背景滾動
+        }
+
+        // 關閉架構圖燈箱
+        function closeImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = ''; // 恢復滾動
+            }, 300);
+        }
+
+        // 綁定 Esc 鍵盤事件以快速關閉燈箱
+        function setupEscKeyListener() {
+            window.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeImageModal();
+                }
+            });
+        }
+
+        // 啟動應用
+        window.onload = init;
+    </script>
+</body>
+</html>
